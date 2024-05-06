@@ -1,4 +1,4 @@
-src_paths=$@
+src_paths=("$@")
 
 if [ -z "$src_paths" ]; then
   (
@@ -18,7 +18,7 @@ function heading {
 }
 
 function source_files {
-  find $src_paths -type f
+  find "${src_paths[@]}" -type f
 }
 
 
