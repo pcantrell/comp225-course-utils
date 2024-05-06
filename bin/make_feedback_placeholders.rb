@@ -4,7 +4,7 @@ require_relative 'questionnaire'
 course = read_course
 
 def make_placeholder_file(name, template)
-  outfile = File.join(projects_dir, '..', 'Project feedback', 'raw', "#{name}.md")
+  outfile = File.join(feebdack_dir, 'raw', "#{name}.md")
   if File.exist?(outfile)
     puts "#{outfile} already exists"
     return
@@ -19,20 +19,6 @@ course.teams.each do |team|
   next if section_filter && team.section != section_filter
 
   make_placeholder_file team.name, <<-__EOS__
-    ## The User’s Experience
-    ​
-    •••
-    ​
-    ## Code and Other Internals
-    ​
-    •••
-    ​
-    ## Demo
-    ​
-    •••
-    ​
-    ## Final Thoughts
-    ​
     •••
     ​
     {grade}

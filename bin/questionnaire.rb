@@ -25,6 +25,10 @@ class Question
   def read_response(respondent, rated_students, cells)
     record_response(respondent, rated_students, *cells.shift(columns))
   end
+
+  def to_s
+    @title
+  end
 end
 
 class SingleAnswerQuestion < Question
@@ -53,6 +57,16 @@ class OpenAnswer < SingleAnswerQuestion
 end
 
 class PerMemberQuestion < Question
+  LIKERT_SCALE = ["strongly disagree", "disagree", "neutral", "agree", "strongly agree"]
+
+  def self.likert(*args)
+    self.new(*args) do |ratings|
+      ratings.map do |x|
+        LIKERT_SCALE.index(x)
+      end
+    end
+  end
+
   def initialize(*args, &ratings_transform)
     super(*args)
     @ratings = {}
@@ -92,6 +106,7 @@ class MemberOpenAnswer < PerMemberQuestion
 end
 
 class MemberScale < PerMemberQuestion
+
   def median_rating_from(student)
     ratings_from(student).compact.median
   end
@@ -99,7 +114,7 @@ class MemberScale < PerMemberQuestion
 protected
 
   def normalize_rating(rating)
-    return nil unless rating && rating =~ /^\s*\d+\s*$/
+    return nil unless rating && rating.to_s =~ /^\s*\d+\s*$/
     rating.to_i
   end
 

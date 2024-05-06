@@ -13,6 +13,10 @@ def projects_dir
   File.join(@course_dir, 'Projects')
 end
 
+def feebdack_dir
+  File.join(@course_dir, 'Project feedback')
+end
+
 def data_file(filename)
   File.join(@data_dir, filename)
 end

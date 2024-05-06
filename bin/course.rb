@@ -6,9 +6,9 @@ class Student
   attr_reader :team, :email
 
   def initialize(row)
-    @first_name = row.fetch('First name').strip
-    @last_name = row.fetch('Last name').strip
-    @email = row.fetch('Email')
+    @first_name = row.fetch('The preferred name or nickname you would like people to use for you in class:').strip
+    @last_name = row.fetch('Your family name:').strip
+    @email = row.fetch('Email Address')
     # @github_user = row.fetch('Github username')
     @all_name_variants = []
     variants =
@@ -40,7 +40,11 @@ class Student
   end
 
   def add_name_variant(variant)
-    @all_name_variants << variant.downcase.strip
+    @all_name_variants << Student.normalize_name(variant)
+  end
+
+  def self.normalize_name(name)
+    name.downcase.gsub("-", " ").strip
   end
 end
 
@@ -54,7 +58,7 @@ class Team
   end
 
   def member_named(name_variant)
-    name_variant = name_variant.downcase.strip
+    name_variant = Student.normalize_name(name_variant)
     possibilities = members.select do |s|
       s.all_name_variants.any? do |n|
         n == name_variant
@@ -93,6 +97,9 @@ class Course
           row.fetch('Team'),
           row.fetch('Section')))
       add_student(student)
+    rescue
+      STDERR.puts "Error while processing row: #{row.inspect}"
+      raise
     end
   end
 
@@ -118,7 +125,7 @@ class Course
   def student_with_email(email)
     email += "@macalester.edu" unless email =~ /@/
     students.select { |s| s.email == email }.first or
-      raise "No student with email #{email.inspect}"
+      warn "No student with email #{email.inspect}"
   end
 
   def add_student(student)

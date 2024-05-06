@@ -1,6 +1,7 @@
 require_relative 'course'
 require_relative 'questionnaire'
 
+
 questions = [
   MemberOpenAnswer.new("Who did what?"),
   MemberScale.new("Quality of work"),
@@ -21,25 +22,32 @@ course = read_course
 
 puts "#{course.students.count} students"
 
-ratings_file = ARGV.shift or abort "ERROR: Please path to csv file"
+ratings_file = ARGV.shift or abort "ERROR: Please provide path to csv file"
 missing = Set.new(course.students)
 CSV.foreach(ratings_file, headers: :first_row) do |row|
-  student = course.student_with_email(row.fetch("Email Address"))
+  # next if row['Your section:'] =~ /Section 1/
+  puts row['Email Address']
+
+  student = course.student_with_email(row.fetch("Email Address")) or next
   missing.delete(student)
   
   teammates = (1...MAX_TEAM_SIZE).map do |i|
     name = row.fetch("Team member ##{i}’s name")
-    next if [nil, "no one", "none", "nope", "na", "n/a", "null", "the void"].include?(name&.downcase)
+    next if [nil, "no", "no one", "none", "nope", "na", "n/a", "null", "the void", "-"].include?(name&.downcase)
     student.team.member_named(name)
   end
   rated_students = [student] + teammates.compact
 
   puts "#{student.first_name} → #{rated_students.map(&:first_name)}"
 
-  cols = row[7..-1]
+  cols = row[6..-1]
   questions.each do |question|
+    puts "Reading #{question} ← #{cols.to_s[0...60]}"
     question.read_response(student, rated_students, cols)
   end
+rescue
+  STDERR.puts "Error while processing row: #{row.inspect}"
+  raise
 end
 
 course.teams.each do |team|
