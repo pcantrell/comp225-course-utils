@@ -18,9 +18,7 @@ def data_file(filename)
 end
 
 def render_haml(template, outfile, template_vars = {})
-  haml_engine = Haml::Engine.new(
-    File.read(
-      File.join(@bin_dir, "#{template}.haml")))
+  haml_engine = Tilt.new(File.join(@bin_dir, "#{template}.haml"))
   
   File.write(
     outfile,

@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.5.0'
+ruby '3.3.0'
 
 gem 'haml'
 gem 'commonmarker'
+
+gem "csv", "~> 3.2"
