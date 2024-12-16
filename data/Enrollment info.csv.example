@@ -1,2 +1,2 @@
-Email,First name,Family name,Name variants,Team,Section
-example@macalester.edu,Sally,Smith,,Smarglefrotz,2
+Timestamp,Email Address,Section,Team,The preferred name or nickname you would like people to use for you in class:,Your family name:,In what order should those two names appear on your namecard?,Your pronouns:,Your Github username:,Name variants
+1/21/2024 17:36:56,foobar@macalester.edu,2,AwesomeProj,Foo,Bar,Family name LAST (e.g. “Diana ROSS”),they/them,foobargithubuser,Fooey
